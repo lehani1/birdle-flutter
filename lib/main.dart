@@ -78,6 +78,13 @@ class _GamePageState extends State<GamePage> {
             ),
           GuessInput(
             onSubmitGuess: (String guess) {
+              if (!_game.isLegalGuess(guess)) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Enter a five-letter word')),
+                );
+                return;
+              }
+
               setState(() {
                 _game.guess(guess);
               });
