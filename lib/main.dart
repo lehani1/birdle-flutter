@@ -64,33 +64,39 @@ class _GamePageState extends State<GamePage> {
   final Game _game = Game();
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Column(
-        spacing: 5.0,
-        children: [
-          for (final guess in _game.guesses)
-            Row(
-              spacing: 5.0,
-              children: [
-                for (final letter in guess) Tile(letter.char, letter.type),
-              ],
-            ),
-          GuessInput(
-            onSubmitGuess: (String guess) {
-              if (!_game.isLegalGuess(guess)) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Enter a five-letter word')),
-                );
-                return;
-              }
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 350.0),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            spacing: 5.0,
+            children: [
+              for (final guess in _game.guesses)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 5.0,
+                  children: [
+                    for (final letter in guess) Tile(letter.char, letter.type),
+                  ],
+                ),
+              GuessInput(
+                onSubmitGuess: (String guess) {
+                  if (!_game.isLegalGuess(guess)) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Enter a five-letter word')),
+                    );
+                    return;
+                  }
 
-              setState(() {
-                _game.guess(guess);
-              });
-            },
+                  setState(() {
+                    _game.guess(guess);
+                  });
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -121,6 +127,7 @@ class GuessInput extends StatelessWidget {
             child: TextField(
               maxLength: 5,
               decoration: InputDecoration(
+                counterText: "",
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(35)),
                 ),
